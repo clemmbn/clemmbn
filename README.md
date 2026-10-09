@@ -27,7 +27,7 @@ I also have a thermal receipt printer at home, so naturally:
 
 - **Legacya**: a tool for French notary offices that helps clerks through the succession (inheritance) process, from opening the file to generating documents. Still in the works.
 
-### Started, not (yet) finished
+### Started but unfinished
 
 Some ideas I'm still fond of:
 
