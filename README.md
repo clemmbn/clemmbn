@@ -11,9 +11,9 @@ I've tinkered with many languages, from Python to C# in my Unity era, with a lon
 
 ### Things I've shipped
 
-- **[auriga-extract](https://github.com/clemmbn/auriga-extract)**: exports your ISAE-SUPAERO timetable into a single `.ics` file for your calendar. Built for myself, but a lot of students ended up using it too.
 - **[typstiz](https://github.com/clemmbn/typstiz)**: a Typst (and LaTeX) typesetting game. A rendered expression shows up, you type the source as fast as you can. I shared it on [r/LaTeX](https://www.reddit.com/r/LaTeX/comments/1wuuhi8/get_faster_at_writing_latex/) and got great feedback.
 - **Seed**: reached 300 users, then closed after a few months. It's where I learned pretty much everything. This [LinkedIn post](https://lnkd.in/p/ednZSQE8) speaks for itself.
+- **[auriga-extract](https://github.com/clemmbn/auriga-extract)**: exports your ISAE-SUPAERO timetable into a single `.ics` file for your calendar. Built for myself, but a lot of students ended up using it too.
 
 ### Things I did for fun
 
