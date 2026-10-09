@@ -19,9 +19,9 @@ I've tinkered with many languages, from Python to C# in my Unity era, with a lon
 
 I also have a thermal receipt printer at home, so naturally:
 
-- **[task-printer](https://github.com/clemmbn/task-printer)**: prints my tasks as little tickets.
 - **[flashcard-printer](https://github.com/clemmbn/flashcard-printer)**: prints Q&A flashcards to study from.
 - **[mail-printer](https://github.com/clemmbn/mail-printer) (WIP)**: a tiny website where anyone can send me a message that gets printed at home.
+- **[task-printer](https://github.com/clemmbn/task-printer)**: prints my tasks as little tickets.
 
 ### Work in progress
 
