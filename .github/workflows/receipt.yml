@@ -1,8 +1,8 @@
 # Reprints the profile receipt with fresh GitHub stats.
 #
 # - Runs daily, on manual dispatch, and whenever the receipt source changes.
-# - Commits only when the generated files actually differ. The receipt date is
-#   the last push anywhere (not today), so quiet days produce no commit.
+# - Commits only when the generated files actually differ. The "N days ago"
+#   line under LAST PRINTED changes daily, so expect one reprint per day.
 # - Needs the GH_STATS_TOKEN secret: a fine-grained, read-only token
 #   (all repositories; Metadata + Contents: read) so private repos are counted.
 #   The default GITHUB_TOKEN only sees this repo.

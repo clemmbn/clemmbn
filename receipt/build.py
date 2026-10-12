@@ -24,6 +24,7 @@ Constraints
 
 import html
 import random
+from datetime import datetime, timezone
 from pathlib import Path
 
 import stats as gh_stats
@@ -262,14 +263,30 @@ def svg_doc(entries, theme, torn_top=True, torn_bottom=True):
 '''
 
 
+def ago(when, now=None):
+    """Return a day-granularity relative age like "today" or "3 days ago".
+
+    when (datetime): tz-aware timestamp. now (datetime|None): defaults to UTC now.
+    Trade-off: days, not hours. The receipt is only reprinted once a day, so
+    "2 hours ago" would sit frozen and wrong for up to 24 hours.
+    """
+    days = ((now or datetime.now(timezone.utc)).date() - when.date()).days
+    if days <= 0:
+        return "today"
+    if days == 1:
+        return "yesterday"
+    if days < 60:
+        return f"{days} days ago"
+    return f"{days // 30} months ago"
+
+
 def expand(receipt, s):
     """Replace the ("meta",)/("stats",) placeholders with live rows.
 
     receipt (list): RECEIPT entries. s (dict): output of stats.fetch().
     Returns (list): a new entry list ready to render.
-    Design choice: the receipt date is the last push anywhere, not today's
-    date, so the SVG only changes when there is real activity and the daily
-    Action doesn't commit an identical-but-redated receipt every morning.
+    Note: the "N days ago" line changes every day, so the daily Action now
+    commits a reprint each morning even without new activity.
     """
     rows = {
         "meta": [("pair", "DATE " + s["last_date"].strftime("%Y-%m-%d"),
@@ -278,8 +295,9 @@ def expand(receipt, s):
             ("total", "PROJECTS STARTED", str(s["started"])),
             ("total", "COMMITS", str(s["commits"])),
             ("item", "MOST USED", (s["language"] or "?").upper(), None, None, None),
-            # Its date is already the receipt DATE in the header
-            ("item", "LAST PRINTED", s["last_name"], None, None, None),
+            # Relative age as a note: the absolute date is already the DATE in
+            # the header, and a long repo name leaves no room on the right
+            ("item", "LAST PRINTED", s["last_name"], None, ago(s["last_date"]), None),
         ],
     }
     out = []
