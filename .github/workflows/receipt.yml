@@ -1,0 +1,49 @@
+# Reprints the profile receipt with fresh GitHub stats.
+#
+# - Runs daily, on manual dispatch, and whenever the receipt source changes.
+# - Commits only when the generated files actually differ. The receipt date is
+#   the last push anywhere (not today), so quiet days produce no commit.
+# - Needs the GH_STATS_TOKEN secret: a fine-grained, read-only token
+#   (all repositories; Metadata + Contents: read) so private repos are counted.
+#   The default GITHUB_TOKEN only sees this repo.
+# - Pushes made with GITHUB_TOKEN don't trigger workflows, so the reprint
+#   commit can't loop back into another run.
+# - No untrusted event data (titles, commit messages...) is used in run steps.
+
+name: Reprint receipt
+
+on:
+  schedule:
+    - cron: "17 5 * * *"   # 05:17 UTC daily; off the hour to dodge cron congestion
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["receipt/**.py"]
+
+permissions:
+  contents: write
+
+jobs:
+  reprint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10.1.0
+
+      - name: Build receipt
+        run: uv run --with segno python receipt/build.py
+        env:
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+
+      - name: Commit if changed
+        run: |
+          git add README.md receipt/*.svg
+          if git diff --staged --quiet; then
+            echo "Receipt unchanged, nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Reprint receipt"
+          git push

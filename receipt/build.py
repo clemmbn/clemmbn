@@ -8,6 +8,8 @@ Purpose
       README.md (repo root)       <picture> that swaps the two + a links line
 
     Edit RECEIPT, then run:  uv run --with segno python receipt/build.py
+    The ("meta",) and ("stats",) entries are filled with live numbers from
+    stats.py; .github/workflows/receipt.yml reruns this daily.
 
 Constraints
     - GitHub renders SVGs through <img>, so they cannot load web fonts, run
@@ -24,6 +26,8 @@ import html
 import random
 from pathlib import Path
 
+import stats as gh_stats
+
 OUT = Path(__file__).parent
 README = OUT.parent / "README.md"
 
@@ -36,22 +40,27 @@ README = OUT.parent / "README.md"
 #   ("total", left, right)             bold right-aligned totals row
 #   ("text", text)                     indented free text
 #   ("blank",)                         empty line
+#   ("pair", left, right)              plain left/right row, no leader
 #   ("footer",)                        QR code + barcode block
+#   ("meta",) / ("stats",)             placeholders filled with live GitHub
+#                                      numbers at build time (see expand())
 # Links (href) are not clickable inside the image; every item with an href is
 # also listed in the links line under the receipt.
 # --------------------------------------------------------------------------
 GH = "https://github.com/clemmbn/"
 RECEIPT = [
     ("center", "HI, I'M CLÉMENT 👨🏼‍💻"),
-    ("center", "builder of everyday-life apps"),
+    ("center", "software, hardware & side quests"),
     # TODO: remove this line when I graduate
     ("center", "ISAE-SUPAERO · aerospace -> data & ML"),
     ("rule", "="),
+    ("meta",),
+    ("blank",),
     ("section", "SHIPPED"),
+    ("item", "Seed", "300 USERS", "https://lnkd.in/p/ednZSQE8",
+     "Chrome extension. my first true project", None),
     ("item", "typstiz", "OK", GH + "typstiz",
      "Typst/LaTeX typesetting game", None),
-    ("item", "Seed", "300 USERS", "https://lnkd.in/p/ednZSQE8",
-     "closed. my first true project", None),
     ("item", "auriga-extract", "OK", GH + "auriga-extract",
      "University timetable -> .ics", None),
     ("blank",),
@@ -68,9 +77,7 @@ RECEIPT = [
     ("item", "Enigmate", "MAYBE LATER", None, None, None),
     ("item", "Deap", "DREAMING", None, None, None),
     ("rule", "-"),
-    ("total", "PROJECTS STARTED", "10"),
-    ("total", "PROJECTS FINISHED", "5"),
-    ("total", "FINISH RATE", "50%"),
+    ("stats",),
     ("rule", "-"),
     ("section", "NOW PRINTING"),
     ("text", "ML & DL coursework"),
@@ -200,6 +207,11 @@ def svg_rows(entries, t, y):
             if note:
                 y += NOTE_LH
                 out.append(f'<text x="{left + 14}" y="{y}" font-size="12" fill="{t["soft"]}">{html.escape(note)}</text>')
+        elif kind == "pair":
+            y += NOTE_LH
+            out.append(f'<text x="{left}" y="{y}" font-size="12" fill="{t["soft"]}">{html.escape(f[0])}</text>')
+            out.append(f'<text x="{right}" y="{y}" text-anchor="end" font-size="12" '
+                       f'fill="{t["soft"]}">{html.escape(f[1])}</text>')
         elif kind == "text":
             y += NOTE_LH + 2
             out.append(f'<text x="{left + 14}" y="{y}">{html.escape(f[0])}</text>')
@@ -247,6 +259,34 @@ def svg_doc(entries, theme, torn_top=True, torn_bottom=True):
 '''
 
 
+def expand(receipt, s):
+    """Replace the ("meta",)/("stats",) placeholders with live rows.
+
+    receipt (list): RECEIPT entries. s (dict): output of stats.fetch().
+    Returns (list): a new entry list ready to render.
+    Design choice: the receipt date is the last push anywhere, not today's
+    date, so the SVG only changes when there is real activity and the daily
+    Action doesn't commit an identical-but-redated receipt every morning.
+    """
+    rows = {
+        "meta": [("pair", "DATE " + s["last_date"].strftime("%Y-%m-%d"),
+                  f"TICKET #{s['commits']:04d}")],
+        "stats": [
+            ("total", "PROJECTS STARTED", str(s["started"])),
+            ("total", "COMMITS", str(s["commits"])),
+            ("item", "MOST USED", (s["language"] or "?").upper(), None, None, None),
+            # Its date is already the receipt DATE in the header
+            ("item", "LAST PRINTED", s["last_name"], None, None, None),
+            ("blank",),
+            ("item", "PAID WITH", "CURIOSITY", None, None, None),
+        ],
+    }
+    out = []
+    for e in receipt:
+        out += rows.get(e[0], [e])
+    return out
+
+
 def write(path, content):
     """Write a generated file (path: Path) and log its size."""
     path.write_text(content, encoding="utf-8")
@@ -274,8 +314,9 @@ def readme():
 
 
 if __name__ == "__main__":
-    print(f"[build] {len(RECEIPT)} receipt entries")
+    receipt = expand(RECEIPT, gh_stats.fetch())
+    print(f"[build] {len(receipt)} receipt entries after expanding live stats")
     for theme in THEMES:
-        write(OUT / f"receipt-{theme}.svg", svg_doc(RECEIPT, theme))
+        write(OUT / f"receipt-{theme}.svg", svg_doc(receipt, theme))
     write(README, readme())
     print("[build] done")
