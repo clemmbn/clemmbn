@@ -54,6 +54,7 @@ RECEIPT = [
     # TODO: remove this line when I graduate
     ("center", "ISAE-SUPAERO · aerospace -> data & ML"),
     ("rule", "="),
+    # LIVE: replaced by expand() with "DATE <last push>   TICKET #<commits>"
     ("meta",),
     ("blank",),
     ("section", "SHIPPED"),
@@ -77,6 +78,8 @@ RECEIPT = [
     ("item", "Enigmate", "MAYBE LATER", None, None, None),
     ("item", "Deap", "DREAMING", None, None, None),
     ("rule", "-"),
+    # LIVE: replaced by expand() with the totals block (started, commits,
+    # most used language, last printed repo)
     ("stats",),
     ("rule", "-"),
     ("section", "NOW PRINTING"),
@@ -277,8 +280,6 @@ def expand(receipt, s):
             ("item", "MOST USED", (s["language"] or "?").upper(), None, None, None),
             # Its date is already the receipt DATE in the header
             ("item", "LAST PRINTED", s["last_name"], None, None, None),
-            ("blank",),
-            ("item", "PAID WITH", "CURIOSITY", None, None, None),
         ],
     }
     out = []
