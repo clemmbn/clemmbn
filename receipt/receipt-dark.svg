@@ -10,7 +10,7 @@
   <text x="200.0" y="72" text-anchor="middle" font-size="14">software, hardware &amp; side quests</text>
   <text x="200.0" y="94" text-anchor="middle" font-size="14">ISAE-SUPAERO · aerospace -&gt; data &amp; ML</text>
   <line x1="42" x2="358" y1="109.4" y2="109.4" stroke="#1a1a1a" stroke-width="1.6" stroke-dasharray="none"/>
-  <text x="42" y="134.0" font-size="12" fill="#5d5a54">DATE 2026-10-13</text>
+  <text x="42" y="134.0" font-size="12" fill="#5d5a54">DATE 2026-10-20</text>
   <text x="358" y="134.0" text-anchor="end" font-size="12" fill="#5d5a54">TICKET #0746</text>
   <text x="42" y="166.0" font-weight="700" letter-spacing="1">SHIPPED</text>
   <line x1="42" x2="358" y1="184.0" y2="184.0" stroke="#5d5a54" stroke-width="1.4" stroke-dasharray="0.1 4.5" stroke-linecap="round"/>
@@ -65,7 +65,7 @@
   <line x1="42" x2="358" y1="700.0" y2="700.0" stroke="#5d5a54" stroke-width="1.4" stroke-dasharray="0.1 4.5" stroke-linecap="round"/>
   <text x="42" y="704.0" paint-order="stroke" stroke="#e6e2d8" stroke-width="8" stroke-linejoin="round">LAST PRINTED</text>
   <text x="358" y="704.0" text-anchor="end" paint-order="stroke" stroke="#e6e2d8" stroke-width="8" stroke-linejoin="round">[REDACTED]</text>
-  <text x="56" y="722.0" font-size="12" fill="#5d5a54">6 days ago</text>
+  <text x="56" y="722.0" font-size="12" fill="#5d5a54">today</text>
   <line x1="42" x2="358" y1="737.4" y2="737.4" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="6 4"/>
   <text x="42" y="766.0" font-weight="700" letter-spacing="1">NOW PRINTING</text>
   <text x="56" y="786.0">ML &amp; DL coursework</text>
